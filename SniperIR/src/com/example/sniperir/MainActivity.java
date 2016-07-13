@@ -89,27 +89,26 @@ public class MainActivity extends Activity {
 						mDialog.dismiss();
 					}
 				}, SCAN_PERIOD);
+				
+				scanLeDevice();
+
+				showRoundProcessDialog(MainActivity.this, R.layout.loading_process_dialog_anim);
+
+				Timer mTimer2 = new Timer();
+				mTimer2.schedule(new TimerTask() {
+
+					@Override
+					public void run() {
+						Intent deviceListIntent = new Intent(getApplicationContext(),
+								Device.class);
+						startActivity(deviceListIntent);
+						Log.i(LOG, "run(2) ");
+						if (mDialog != null)
+						mDialog.dismiss();
+					}
+				}, SCAN_PERIOD);
 			}
 		});
-
-		scanLeDevice();
-
-		showRoundProcessDialog(MainActivity.this, R.layout.loading_process_dialog_anim);
-
-		Timer mTimer = new Timer();
-		mTimer.schedule(new TimerTask() {
-
-			@Override
-			public void run() {
-				Intent deviceListIntent = new Intent(getApplicationContext(),
-						Device.class);
-				startActivity(deviceListIntent);
-				Log.i(LOG, "run(2) ");
-				if (mDialog != null)
-				mDialog.dismiss();
-			}
-		}, SCAN_PERIOD);
-
 		instance = this;
     }
     
