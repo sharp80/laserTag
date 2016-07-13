@@ -34,7 +34,7 @@ public class OverlayView extends View implements SensorEventListener {
     private final boolean mShouldRun = true; // If the Runnable should keep on running
 	private final Handler mHandler = new Handler();
     private Runnable mUpdateHits;
-	private int mMyLastHitsSize;
+	private int mMyLastHitsSize = -1;
 	private Context mMyContext = null;
     
     public OverlayView(Context context) {
@@ -80,12 +80,7 @@ public class OverlayView extends View implements SensorEventListener {
         //canvas.drawText(accelData, canvas.getWidth()/2, canvas.getHeight()/4, contentPaint);
         //canvas.draw(compassData, canvas.getWidth()/2, canvas.getHeight()/2, contentPaint);
         // canvas.drawText(gyroData, canvas.getWidth()/2, (canvas.getHeight()*3)/4, contentPaint);
-        
-        
-    
-       
-        
-    }
+     }
     
     private void checkMyHits(){
 		Thread t = new Thread() {
@@ -113,10 +108,9 @@ public class OverlayView extends View implements SensorEventListener {
 						Log.d("checkMyHits",  "res=" +result);
 
 						JSONArray jsonResult = new JSONArray(result);
-						Log.d("checkMyHits",  "jsonResult=" +jsonResult);
 	    				
 						int len = jsonResult.length();
-						//if (mMyLastHitsSize < len)
+						if (mMyLastHitsSize != -1 && mMyLastHitsSize < len)
 							showTost( jsonResult.getString(len-1));
 							
 						mMyLastHitsSize = jsonResult.length();
@@ -143,7 +137,8 @@ public class OverlayView extends View implements SensorEventListener {
     	            public void run()
     	            {
     	            	Toast.makeText(mMyContext, "You Killed " + mName, Toast.LENGTH_SHORT)
-						.show();    	            }
+						.show();    	          
+    	            }
     	        }
     	    );
     }
