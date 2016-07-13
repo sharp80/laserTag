@@ -3,5 +3,6 @@
 
     <string name="app_name">SniperIR</string>
     <string name="hello_world">Hello world!</string>
-
+    <string name="submit">Submit!</string>
+    
 </resources>

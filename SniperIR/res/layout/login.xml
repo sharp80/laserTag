@@ -1,0 +1,42 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    
+    <LinearLayout 
+        android:gravity="center_horizontal"
+        android:layout_gravity="center_horizontal"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical" >
+     
+     <TextView
+      android:id="@+id/text_id"
+      android:layout_width="300dp"
+      android:layout_height="200dp"
+      android:capitalize="characters"
+      android:text="Nick Name"
+      android:textColor="@android:color/holo_blue_dark"
+      android:textColorHighlight="@android:color/primary_text_dark"
+      android:layout_centerVertical="true"
+      android:layout_alignParentEnd="true"
+      android:textSize="30dp"/>
+    
+    <EditText
+    android:id="@+id/nickname"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:inputType="text"
+    android:imeOptions="actionSend" />
+    
+    </LinearLayout>
+    <Button
+	 android:id="@+id/submit"
+     android:layout_height="wrap_content"
+     android:layout_width="wrap_content"
+     android:text="@string/submit"
+      />
+        
+</LinearLayout>
