@@ -35,7 +35,7 @@ public class OverlayView extends View implements SensorEventListener {
     
     @Override
     protected void onDraw(Canvas canvas) {
-        Log.d(DEBUG_TAG, "onDraw");
+       // Log.d(DEBUG_TAG, "onDraw");
         super.onDraw(canvas);
            
         // Draw something fixed (for now) over the camera view
@@ -49,12 +49,11 @@ public class OverlayView extends View implements SensorEventListener {
     }
 
     public void onAccuracyChanged(Sensor arg0, int arg1) {
-        Log.d(DEBUG_TAG, "onAccuracyChanged");
+        //Log.d(DEBUG_TAG, "onAccuracyChanged");
         
     }
 
     public void onSensorChanged(SensorEvent event) {
-        Log.d(DEBUG_TAG, "onSensorChanged");
         
         StringBuilder msg = new StringBuilder(event.sensor.getName()).append(" ");
         for(float value: event.values)
