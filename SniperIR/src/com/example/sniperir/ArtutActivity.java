@@ -116,13 +116,13 @@ public class ArtutActivity extends Activity {
 	}
 	
 	private void execEvent(String event){
-		if (event.equals("DEVICE_CONNECTED")) {
+		if (event.equals("C")) {
 			getBeaconFromServer();
-		} else if (event.startsWith("WAS_SHOT")) {
-			String idStr = event.substring(event.indexOf(":")+1, event.length());
-			int shooterBeaconId = Integer.valueOf(idStr);
-			Log.d(TAG, "shooterBeaconId :"+ shooterBeaconId );
-			sendKilledToServer(idStr);
+		} else if (event.startsWith("0") || event.startsWith("1") ||
+				event.startsWith("2") || event.startsWith("3") || 
+				event.startsWith("4")) {
+			Log.d(TAG, "shooterBeaconId :"+ event );
+			sendKilledToServer(event);
 		}
 
 	}
@@ -160,7 +160,7 @@ public class ArtutActivity extends Activity {
 	    				inputStream = httpResponse.getEntity().getContent();
 	    				
 	    				String res =  convertInputStreamToString(inputStream);
-	    				Log.d("laser", res);
+	    				Log.d(TAG, res);
 	    				JSONObject json = new JSONObject(res);
 	    				Message msg = new Message();
 	    				msg.arg1 = json.getInt("beacon");
@@ -282,11 +282,11 @@ public class ArtutActivity extends Activity {
 	}
 
 	void sendBeaconToBt(int beaconId) {
-		sendEventToPluggable("BEACON:"+beaconId);
+		sendEventToPluggable(String.valueOf(beaconId));
 	}
 	
 	public void sendShotCommandToBt() {
-		sendEventToPluggable("SHOOT");
+		sendEventToPluggable("S");
 	}
 	
 	@Override
