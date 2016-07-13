@@ -119,9 +119,10 @@ public class ArtutActivity extends Activity {
 		if (event.equals("DEVICE_CONNECTED")) {
 			getBeaconFromServer();
 		} else if (event.startsWith("WAS_SHOT")) {
-			String intStr = event.substring(event.indexOf(":")+1, event.length());
-			int shooterBeaconId = Integer.valueOf(intStr);
+			String idStr = event.substring(event.indexOf(":")+1, event.length());
+			int shooterBeaconId = Integer.valueOf(idStr);
 			Log.d(TAG, "shooterBeaconId :"+ shooterBeaconId );
+			sendKilledToServer(idStr);
 		}
 
 	}
@@ -370,6 +371,44 @@ public class ArtutActivity extends Activity {
 
 		return intentFilter;
 	}
-    
-    
+
+	private void sendKilledToServer(final String shooterID){
+		sendKilled(Secure.getString(getContentResolver(),
+				Secure.ANDROID_ID), shooterID);
+	}
+
+	public void sendKilled(final String androidID, final String shooterID)
+	{
+		Thread t = new Thread() {
+
+			public void run() {
+
+				InputStream inputStream = null;
+				String result = "";
+				String url = "http://212.29.223.4/hitby?imei="+androidID + "&shooter=" + shooterID;
+				Log.d("sendKilled","url="+ url);
+				try {
+
+					// create HttpClient
+					HttpClient httpclient = new DefaultHttpClient();
+
+					// make GET request to the given URL
+					HttpResponse httpResponse = httpclient.execute(new HttpGet(url));
+					Log.d("sendKilled",  "respond=" +httpResponse.getStatusLine());
+
+					// receive response as inputStream
+					//	inputStream = httpResponse.getEntity().getContent();
+
+					//	result =  convertInputStreamToString(inputStream);
+					//	Log.d("sendKilled",  "res=" +result);
+
+
+				} catch (Exception e) {
+					Log.d("InputStream", e.getLocalizedMessage());
+				}
+			}
+		};
+
+		t.start(); 
+	}
 }
