@@ -23,27 +23,25 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.res.AssetFileDescriptor;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.SoundPool;
+import android.media.SoundPool.OnLoadCompleteListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.provider.Settings.Secure;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 public class ArtutActivity extends Activity {
-    
-    
 	private final static String TAG = "ArtutActivity";
-
+	MediaPlayer player = null;
 	public static final String EXTRAS_DEVICE = "EXTRAS_DEVICE";
 	private String mDeviceName;
 	private String mDeviceAddress;
@@ -90,6 +88,7 @@ public class ArtutActivity extends Activity {
 			@Override
 			public void onClick(View arg0) {
 				Log.d("ArtutActivity", "SHOOT sensed");
+				player.start();
 				sendShotCommandToBt();
 			}
 		});
@@ -184,13 +183,47 @@ public class ArtutActivity extends Activity {
 	 
 	    }
 	 
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
+		AssetFileDescriptor afd = null;
+		try {
+			afd = getAssets().openFd("shoot.mp3");
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		player = new MediaPlayer();
+		 try {
+			player.setDataSource(afd.getFileDescriptor(),afd.getStartOffset(),afd.getLength());
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		 try {
+			player.prepare();
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		initAr();
 
-		/*tv = (TextView) findViewById(R.id.textView);
+		   // Set the hardware buttons to control the music
+	    this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
+	    // Load the sound
+		/*tv = (TextView) findViewById(R.id.te
+		 * xtView);
 		tv.setMovementMethod(ScrollingMovementMethod.getInstance());
 		et = (EditText) findViewById(R.id.editText);
 		btn = (Button) findViewById(R.id.send);
@@ -287,6 +320,9 @@ public class ArtutActivity extends Activity {
 
 		mBluetoothLeService.disconnect();
 		mBluetoothLeService.close();
+		if (player != null) {
+		player.release();
+		}
 
 		System.exit(0);
 	}

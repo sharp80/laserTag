@@ -1,9 +1,5 @@
 package com.example.sniperir;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -25,8 +21,6 @@ import android.content.Intent;
 import android.content.DialogInterface.OnKeyListener;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Handler;
-import android.provider.Settings.Secure;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -114,30 +108,11 @@ public class MainActivity extends Activity {
 			}
 		});
 		
-		
-		
-		Button btn2 = (Button)findViewById(R.id.btn2);
-		btn2.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				Intent cameraHandler = new Intent(getApplicationContext(),
-						CameraHandler.class);
-				startActivity(cameraHandler);
-				Log.i(LOG, "send intent to cameraHandler");
-			}
-		});
 		instance = this;
-		
 		Intent intent = new Intent(this, Login.class);
 		startActivity(intent);
     }
     
-    private void sendBeaconToBt(int beaconId) {
-    	
-    }
-    
-       
 	public void showRoundProcessDialog(Context mContext, int layout) {
 		OnKeyListener keyListener = new OnKeyListener() {
 			@Override
@@ -191,15 +166,4 @@ public class MainActivity extends Activity {
 			});
 		}
 	};
-
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// User chose not to enable Bluetooth.
-		if (requestCode == REQUEST_ENABLE_BT
-				&& resultCode == Activity.RESULT_CANCELED) {
-			finish();
-			return;
-		}
-		super.onActivityResult(requestCode, resultCode, data);
-	}
 }

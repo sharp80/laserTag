@@ -5,7 +5,6 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.ImageFormat;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
 import android.hardware.Camera.Size;
@@ -17,10 +16,12 @@ import android.view.SurfaceView;
 public class ArDisplayView extends SurfaceView implements
 		SurfaceHolder.Callback {
 	public static final String DEBUG_TAG = "ArDisplayView Log";
+	@SuppressWarnings("deprecation")
 	Camera mCamera;
 	SurfaceHolder mHolder;
 	Activity mActivity;
 
+	@SuppressWarnings("deprecation")
 	public ArDisplayView(Context context, Activity activity) {
 		super(context);
 
@@ -36,6 +37,7 @@ public class ArDisplayView extends SurfaceView implements
 		mHolder.addCallback(this);
 	}
 
+	@SuppressWarnings("deprecation")
 	public void surfaceCreated(SurfaceHolder holder) {
 		Log.d(DEBUG_TAG, "surfaceCreated");
 
@@ -43,6 +45,7 @@ public class ArDisplayView extends SurfaceView implements
 		mCamera = Camera.open();
 
 		// Set Display orientation
+		@SuppressWarnings("deprecation")
 		CameraInfo info = new CameraInfo();
 		Camera.getCameraInfo(CameraInfo.CAMERA_FACING_BACK, info);
 
@@ -73,6 +76,7 @@ public class ArDisplayView extends SurfaceView implements
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,
 			int height) {
 		Log.d(DEBUG_TAG, "surfaceChanged");
@@ -80,6 +84,7 @@ public class ArDisplayView extends SurfaceView implements
 		Camera.Parameters params = mCamera.getParameters();
 
 		// Find an appropriate preview size that fits the surface
+		@SuppressWarnings("deprecation")
 		List<Size> prevSizes = params.getSupportedPreviewSizes();
 		for (Size s : prevSizes) {
 			if ((s.height <= height) && (s.width <= width)) {
@@ -101,6 +106,7 @@ public class ArDisplayView extends SurfaceView implements
 		mCamera.startPreview();
 	}
 
+	@SuppressWarnings("deprecation")
 	public void surfaceDestroyed(SurfaceHolder holder) {
 		Log.d(DEBUG_TAG, "surfaceDestroyed");
 
