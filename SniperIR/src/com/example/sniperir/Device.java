@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -17,6 +18,7 @@ import android.widget.SimpleAdapter;
 
 public class Device extends Activity implements OnItemClickListener {
 
+	private static final String LOG = "Device";
 	private ArrayList<BluetoothDevice> devices;
 	private List<Map<String, String>> listItems = new ArrayList<Map<String, String>>();
 	private SimpleAdapter adapter;
@@ -27,6 +29,7 @@ public class Device extends Activity implements OnItemClickListener {
 	public static final int RESULT_CODE = 31;
 	public final static String EXTRA_DEVICE_ADDRESS = "EXTRA_DEVICE_ADDRESS";
 	public final static String EXTRA_DEVICE_NAME = "EXTRA_DEVICE_NAME";
+	public final static String whiteList [] = {"C5:D0:FB:2E:FF:80", "C9:46:EC:41:4F:4E", "CE:37:57:57:9F:DA"};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,9 +43,20 @@ public class Device extends Activity implements OnItemClickListener {
 		devices = (ArrayList<BluetoothDevice>) MainActivity.mDevices;
 		for (BluetoothDevice device : devices) {
 			map = new HashMap<String, String>();
-			map.put(DEVICE_NAME, device.getName());
-			map.put(DEVICE_ADDRESS, device.getAddress());
-			listItems.add(map);
+			for (int i = 0; i < whiteList.length; i++) {
+				if (device.getAddress().equalsIgnoreCase(whiteList[i])) {
+					map.put(DEVICE_NAME, device.getName());
+					map.put(DEVICE_ADDRESS, device.getAddress());
+					listItems.add(map);
+					Log.i(LOG, "Added device: " + device.getName() + " with address: " + 
+							device.getAddress()+"\n");
+				}
+				else {
+					Log.i(LOG, "device: " + device.getName() + " with address: " + 
+				device.getAddress() + " Is not in the bluetooth device list although exists!!!\n");
+				}
+					
+			}
 		}
 
 		adapter = new SimpleAdapter(getApplicationContext(), listItems,
