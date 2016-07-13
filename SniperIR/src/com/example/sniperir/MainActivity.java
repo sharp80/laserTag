@@ -49,19 +49,13 @@ public class MainActivity extends Activity {
 	public static List<BluetoothDevice> mDevices = new ArrayList<BluetoothDevice>();
 	public static MainActivity instance = null;
 	
-	private final boolean mShouldRun = true; // If the Runnable should keep on running
-	private final Handler mHandler = new Handler();
-	private Runnable mUpdateHits;
-	private int mMyLastHitsSize;
-	private MainActivity mMyContext = null;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-        mMyContext  = this;
-        
+            
         if (!getPackageManager().hasSystemFeature(
 				PackageManager.FEATURE_BLUETOOTH_LE)) {
 			Toast.makeText(this, "Ble not supported", Toast.LENGTH_SHORT)
@@ -129,87 +123,12 @@ public class MainActivity extends Activity {
 		
 		
 		
-		// This runnable will schedule itself to run at 1 second intervals
-        // if mShouldRun is set true.
-        Log.d(LOG,"before mShouldRun=" + mShouldRun); // Call the method to actually update the clock
-
-        mUpdateHits = new Runnable() {
-                public void run() {
-                        if(mShouldRun) {
-                                checkMyHits(); // Call the method to check my hits
-                                mHandler.postDelayed(mUpdateHits, 10000); // 1 second
-                        }
-                }
-        };
-        
-        mHandler.post(mUpdateHits);
-		
 		instance = this;
 		Intent intent = new Intent(this, Login.class);
 		startActivity(intent);
     }
     
-    private void checkMyHits(){
-		Thread t = new Thread() {
-
-			public void run() {
-
-				InputStream inputStream = null;
-				String result = "";
-				String IMEI = Secure.getString(getContentResolver(),Secure.ANDROID_ID);
-				String url = "http://212.29.223.4/myhits?imei="+ IMEI;
-				Log.d("checkMyHits","url="+ url);
-				try {
-
-					// create HttpClient
-					HttpClient httpclient = new DefaultHttpClient();
-
-					// make GET request to the given URL
-					HttpResponse httpResponse = httpclient.execute(new HttpGet(url));
-					Log.d("checkMyHits",  "respond=" +httpResponse.getStatusLine());
-
-					// receive response as inputStream
-						inputStream = httpResponse.getEntity().getContent();
-
-						result =  ArtutActivity.convertInputStreamToString(inputStream);
-						Log.d("checkMyHits",  "res=" +result);
-
-						JSONArray jsonResult = new JSONArray(result);
-						Log.d("checkMyHits",  "jsonResult=" +jsonResult);
-	    				
-						int len = jsonResult.length();
-						if (mMyLastHitsSize < len)
-							showTost( jsonResult.getString(len-1));
-							
-						mMyLastHitsSize = jsonResult.length();
-						
-						Log.d("checkMyHits",  "mMyHitsSize=" +mMyLastHitsSize);
-
-				} catch (Exception e) {
-					Log.d("checkMyHits", e.getLocalizedMessage());
-				}
-			}
-		};
-
-		t.start(); 
-	}
-    
-    public void showTost(String name)
-    {
-    	final String mName = name;
-    	Handler handler = new Handler(Looper.getMainLooper());
-    	handler.post(
-    	        new Runnable()
-    	        {
-    	            @Override
-    	            public void run()
-    	            {
-    	            	Toast.makeText(mMyContext, "You Killed " + mName, Toast.LENGTH_SHORT)
-						.show();    	            }
-    	        }
-    	    );
-    }
-    
+   
     
 	public void showRoundProcessDialog(Context mContext, int layout) {
 		OnKeyListener keyListener = new OnKeyListener() {
