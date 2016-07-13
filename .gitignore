@@ -1,0 +1,19 @@
+#--------------
+*sublime*
+
+# Java
+# ----
+*.class
+*.jar
+
+# Android
+# -------
+# built application files
+*.apk
+*.ap_
+# files for the dex VM
+*.dex
+# generated files
+SniperIR/bin/
+SniperIR/gen/
+SniperIR/libs/
