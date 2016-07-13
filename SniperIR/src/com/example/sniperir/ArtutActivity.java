@@ -116,25 +116,28 @@ public class ArtutActivity extends Activity {
 	}
 	
 	private void execEvent(String event){
-		if (event.equals("DEVICE_CONNECTED"))
-		{
+		if (event.equals("DEVICE_CONNECTED")) {
 			getBeaconFromServer();
+		} else if (event.startsWith("WAS_SHOT")) {
+			String intStr = event.substring(event.indexOf(":")+1, event.length());
+			int shooterBeaconId = Integer.valueOf(intStr);
+			Log.d(TAG, "shooterBeaconId :"+ shooterBeaconId );
 		}
+
 	}
 	
-	
-	 private void getBeaconFromServer(){
-	    	Handler handler = new Handler() { 
-	    	    @Override 
-	    	    public void handleMessage(Message msg) { 
-	    	    	if (msg.arg1 > -1)
-	    	    		sendBeaconToBt(msg.arg1);
-	    	    } 
-	    	  }; 
-	    	  getBeacon(Secure.getString(getContentResolver(),
-	                Secure.ANDROID_ID), handler);	
-	    }
-	    
+	private void getBeaconFromServer(){
+		Handler handler = new Handler() { 
+			@Override 
+			public void handleMessage(Message msg) { 
+				if (msg.arg1 > -1)
+					sendBeaconToBt(msg.arg1);
+			} 
+		}; 
+		getBeacon(Secure.getString(getContentResolver(),
+				Secure.ANDROID_ID), handler);	
+	}
+
 	    public void getBeacon(final String id, final Handler handler)
 	    {
 	    	Thread t = new Thread() {
@@ -218,12 +221,9 @@ public class ArtutActivity extends Activity {
 			e.printStackTrace();
 		}
 		initAr();
-
-		   // Set the hardware buttons to control the music
-	    this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
-	    // Load the sound
-		/*tv = (TextView) findViewById(R.id.te
-		 * xtView);
+		this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
+	    
+		/*tv = (TextView) findViewById(R.id.textView);
 		tv.setMovementMethod(ScrollingMovementMethod.getInstance());
 		et = (EditText) findViewById(R.id.editText);
 		btn = (Button) findViewById(R.id.send);
