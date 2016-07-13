@@ -11,7 +11,13 @@
     <uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-	
+	<uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    
+	        <uses-feature
+        android:name="android.hardware.bluetooth_le"
+        android:required="true" />
+        
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -26,13 +32,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
-        
+         <activity android:name="com.redbear.chat.Chat" >
+        </activity>
+        <activity
+            android:name=".Device"
+            android:theme="@android:style/Theme.Dialog" >
+        </activity>
+
         <activity
             android:name=".Login"
             android:label="Login" >
         </activity>
-        
+        <!--  Bluetooth service -->
+     <service
+     android:name="com.example.sniperir.RBLService"
+     android:enabled="true" />
     </application>
-
 </manifest>
