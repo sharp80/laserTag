@@ -42,7 +42,7 @@ import android.widget.Toast;
 public class ArtutActivity extends Activity {
     
     
-	private final static String TAG = Chat.class.getSimpleName();
+	private final static String TAG = "ArtutActivity";
 
 	public static final String EXTRAS_DEVICE = "EXTRAS_DEVICE";
 	private String mDeviceName;
