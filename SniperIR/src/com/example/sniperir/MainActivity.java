@@ -1,9 +1,20 @@
 package com.example.sniperir;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import android.os.Message;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONObject;
 
 import com.example.sniperir.Device;
 import com.example.sniperir.MainActivity;
@@ -21,14 +32,14 @@ import android.content.Intent;
 import android.content.DialogInterface.OnKeyListener;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.provider.Settings.Secure;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 public class MainActivity extends Activity {
@@ -75,7 +86,8 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
 				scanLeDevice();
 
-				showRoundProcessDialog(MainActivity.this, R.layout.loading_process_dialog_anim);
+				showRoundProcessDialog(MainActivity.this, 
+						R.layout.loading_process_dialog_anim);
 
 				Timer mTimer = new Timer();
 				mTimer.schedule(new TimerTask() {
@@ -110,8 +122,16 @@ public class MainActivity extends Activity {
 			}
 		});
 		instance = this;
+		
+		Intent intent = new Intent(this, Login.class);
+		startActivity(intent);
     }
     
+    private void sendBeaconToBt(int beaconId) {
+    	
+    }
+    
+       
 	public void showRoundProcessDialog(Context mContext, int layout) {
 		OnKeyListener keyListener = new OnKeyListener() {
 			@Override
@@ -128,7 +148,6 @@ public class MainActivity extends Activity {
 		mDialog = new AlertDialog.Builder(mContext).create();
 		mDialog.setOnKeyListener(keyListener);
 		mDialog.show();
-		// 娉ㄦ��姝ゅ��瑕���惧��show涔���� ������浼���ュ��甯�
 		mDialog.setContentView(layout);
 	}
 

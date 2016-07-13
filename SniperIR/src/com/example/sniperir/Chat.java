@@ -1,8 +1,18 @@
 package com.example.sniperir;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothGattCharacteristic;
@@ -14,7 +24,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
+import android.provider.Settings.Secure;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.MenuItem;
@@ -69,10 +82,84 @@ public class Chat extends Activity {
 				getGattService(mBluetoothLeService.getSupportedGattService());
 			} else if (RBLService.ACTION_DATA_AVAILABLE.equals(action)) {
 				displayData(intent.getByteArrayExtra(RBLService.EXTRA_DATA));
+				String event = getEvent(intent.getByteArrayExtra(RBLService.EXTRA_DATA));
+				execEvent(event);
 			}
 		}
 	};
+	private String getEvent(byte [] byteArray) {
+		String data = new String(byteArray);
+		return data;
+	}
+	
+	private void execEvent(String event){
+		if (event.equals("DEVICE_CONNECTED"))
+		{
+			getBeaconFromServer();
+		}
+	}
+	
+	
+	 private void getBeaconFromServer(){
+	    	Handler handler = new Handler() { 
+	    	    @Override 
+	    	    public void handleMessage(Message msg) { 
+	    	    	if (msg.arg1 > -1)
+	    	    		sendBeaconToBt(msg.arg1);
+	    	    } 
+	    	  }; 
+	    	  getBeacon(Secure.getString(getContentResolver(),
+	                Secure.ANDROID_ID), handler);	
+	    }
+	    
+	    public void getBeacon(final String id, final Handler handler)
+	    {
+	    	Thread t = new Thread() {
 
+	    		public void run() {
+
+	    			InputStream inputStream = null;
+	    			String result = "";
+	    			String url = "https://lasertag.rapidapi.io/getbeacon?id="+id;
+	    			try {
+
+	    				// create HttpClient
+	    				HttpClient httpclient = new DefaultHttpClient();
+
+	    				// make GET request to the given URL
+	    				HttpResponse httpResponse = httpclient.execute(new HttpGet(url));
+
+	    				// receive response as inputStream
+	    				inputStream = httpResponse.getEntity().getContent();
+	    				
+	    				String res =  convertInputStreamToString(inputStream);
+	    				Log.d("laser", res);
+	    				JSONObject json = new JSONObject(res);
+	    				Message msg = new Message();
+	    				msg.arg1 = json.getInt("beacon");
+	    				handler.sendMessage(msg);
+	    				
+	    			} catch (Exception e) {
+	    				Log.d("InputStream", e.getLocalizedMessage());
+	    			}
+	    		}
+	    	};
+
+	    	t.start(); 
+	    }
+	    
+	    private static String convertInputStreamToString(InputStream inputStream) throws IOException{
+	        BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
+	        String line = "";
+	        String result = "";
+	        while((line = bufferedReader.readLine()) != null)
+	            result += line;
+	 
+	        inputStream.close();
+	        return result;
+	 
+	    }
+	 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -116,7 +203,33 @@ public class Chat extends Activity {
 		Intent gattServiceIntent = new Intent(this, RBLService.class);
 		bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
 	}
+	
+	void sendEventToPluggable(String event) {
+		BluetoothGattCharacteristic characteristic = map
+				.get(RBLService.UUID_BLE_SHIELD_TX);
 
+		byte b = 0x00;
+		byte[] tmp = event.getBytes();
+		byte[] tx = new byte[tmp.length + 1];
+		tx[0] = b;
+		for (int i = 1; i < tmp.length + 1; i++) {
+			tx[i] = tmp[i - 1];
+		}
+
+		characteristic.setValue(tx);
+		mBluetoothLeService.writeCharacteristic(characteristic);
+
+		et.setText("");
+	}
+
+	void sendBeaconToBt(int beaconId) {
+		sendEventToPluggable("BEACON:"+beaconId);
+	}
+	
+	public void sendShotCommandToBt() {
+		sendEventToPluggable("SHOOT");
+	}
+	
 	@Override
 	protected void onResume() {
 		super.onResume();

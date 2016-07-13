@@ -13,9 +13,11 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.protocol.HTTP;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -32,12 +34,25 @@ public class Login extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        initUi();
+        setContentView(R.layout.login);
+        SharedPreferences sharedPref = this.getSharedPreferences(
+                "laser", MODE_PRIVATE);
+        if (sharedPref.getInt("nickName", 0) == 0)
+        	initUi();	
+        else
+        	finish();
     }
     
-    
-    protected void sendJson(final String id, final String nickName, final Handler onPostEnd) {
+    private JSONObject createJson(final String id, final String nickName) 
+    		throws JSONException
+    {
+        JSONObject json = new JSONObject();
+    	json.put("id", id);
+        json.put("nickName", nickName);
+    	return json;
+    	
+    }
+    static public void sendJson(final JSONObject json, final Handler onPostEnd) {
         Thread t = new Thread() {
 
             public void run() {
@@ -45,12 +60,9 @@ public class Login extends Activity {
                 HttpClient client = new DefaultHttpClient();
                 HttpConnectionParams.setConnectionTimeout(client.getParams(), 10000); //Timeout Limit
                 HttpResponse response;
-                JSONObject json = new JSONObject();
 
                 try {
-                    HttpPost post = new HttpPost("http://hitap-oferl.redbend.com:8080/registrer");
-                    json.put("id", id);
-                    json.put("nickName", nickName);
+                    HttpPost post = new HttpPost("https://lasertag.rapidapi.io/register");
                     StringEntity se = new StringEntity( json.toString());  
                     se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
                     post.setEntity(se);
@@ -88,11 +100,24 @@ public class Login extends Activity {
 		    	Handler handler = new Handler() { 
 		    	    @Override 
 		    	    public void handleMessage(Message msg) { 
+		    	    	SharedPreferences sharedPref = getSharedPreferences(
+		    	    			"laser", MODE_PRIVATE);
+		    	    	SharedPreferences.Editor editor = sharedPref.edit();
+		    	    	editor.putInt("nickName", 1);
+		    	    	editor.commit();
 		    	    	finish();
 		    	    } 
 		    	  }; 
-				sendJson(Secure.getString(v.getContext().getContentResolver(),
-                        Secure.ANDROID_ID), et.getText().toString(), handler);
+		    	  
+		    	JSONObject json;
+				try {
+					json = createJson(Secure.getString(v.getContext().getContentResolver(),
+					            Secure.ANDROID_ID), et.getText().toString());
+					sendJson(json, handler);
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
     }
