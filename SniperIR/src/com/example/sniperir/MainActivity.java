@@ -121,6 +121,20 @@ public class MainActivity extends Activity {
 				}, SCAN_PERIOD);
 			}
 		});
+		
+		
+		
+		Button btn2 = (Button)findViewById(R.id.btn2);
+		btn2.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent cameraHandler = new Intent(getApplicationContext(),
+						CameraHandler.class);
+				startActivity(cameraHandler);
+				Log.i(LOG, "send intent to cameraHandler");
+			}
+		});
 		instance = this;
 		
 		Intent intent = new Intent(this, Login.class);

@@ -13,10 +13,14 @@
 	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 	<uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     
-	        <uses-feature
+	<uses-feature
         android:name="android.hardware.bluetooth_le"
         android:required="true" />
+	<uses-feature android:name="android.hardware.camera" />
         
     <application
         android:allowBackup="true"
@@ -42,6 +46,10 @@
         <activity
             android:name=".Login"
             android:label="Login" >
+        </activity>
+        <activity
+            android:name=".CameraHandler"
+            android:label="CameraHandler" >
         </activity>
         <!--  Bluetooth service -->
      <service
