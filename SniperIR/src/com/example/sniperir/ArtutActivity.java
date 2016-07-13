@@ -144,7 +144,7 @@ public class ArtutActivity extends Activity {
 
 	    			InputStream inputStream = null;
 	    			String result = "";
-	    			String url = "https://lasertag.rapidapi.io/getbeacon?id="+id;
+	    			String url = "https://212.29.223.4/getbeacon?imei="+id;
 	    			try {
 
 	    				// create HttpClient
