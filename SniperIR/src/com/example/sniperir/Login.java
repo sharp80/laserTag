@@ -62,7 +62,7 @@ public class Login extends Activity {
                 HttpResponse response;
 
                 try {
-                    HttpPost post = new HttpPost("https://lasertag.rapidapi.io/register");
+                    HttpPost post = new HttpPost("http://212.29.223.4/registrer");
                     StringEntity se = new StringEntity( json.toString());  
                     se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
                     post.setEntity(se);
