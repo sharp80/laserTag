@@ -175,7 +175,7 @@ public class ArtutActivity extends Activity {
 	    	t.start(); 
 	    }
 	    
-	    private static String convertInputStreamToString(InputStream inputStream) throws IOException{
+	    public static String convertInputStreamToString(InputStream inputStream) throws IOException{
 	        BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
 	        String line = "";
 	        String result = "";
