@@ -32,7 +32,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-         <activity android:name="com.redbear.chat.Chat" >
+         <activity android:name="com.example.sniperir.Chat" >
         </activity>
         <activity
             android:name=".Device"
