@@ -42,6 +42,7 @@ import android.widget.FrameLayout;
 public class ArtutActivity extends Activity {
 	private final static String TAG = "ArtutActivity";
 	MediaPlayer player = null;
+	MediaPlayer playerKilled = null;
 	public static final String EXTRAS_DEVICE = "EXTRAS_DEVICE";
 	private String mDeviceName;
 	private String mDeviceAddress;
@@ -123,6 +124,7 @@ public class ArtutActivity extends Activity {
 			Log.d(TAG, "########shooterBeaconId :"+ event );
 			event = event.substring(2);
 			sendKilledToServer(event);
+			playerKilled.start();
 			Intent killed = new Intent(getApplicationContext(),
 					KilledActivity.class);
 			startActivity(killed);
@@ -195,16 +197,19 @@ public class ArtutActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		AssetFileDescriptor afd = null;
+		AssetFileDescriptor afd = null, afd2 = null;
 		try {
 			afd = getAssets().openFd("shoot.mp3");
+			afd2 = getAssets().openFd("killed.mp3");
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		player = new MediaPlayer();
+		playerKilled = new MediaPlayer();
 		 try {
 			player.setDataSource(afd.getFileDescriptor(),afd.getStartOffset(),afd.getLength());
+			playerKilled.setDataSource(afd2.getFileDescriptor(),afd2.getStartOffset(),afd2.getLength());
 		} catch (IllegalArgumentException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -217,6 +222,7 @@ public class ArtutActivity extends Activity {
 		}
 		 try {
 			player.prepare();
+			playerKilled.prepare();
 		} catch (IllegalStateException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -327,7 +333,9 @@ public class ArtutActivity extends Activity {
 		if (player != null) {
 		player.release();
 		}
-
+		if (playerKilled != null) {
+			playerKilled.release();
+		}
 		System.exit(0);
 	}
 
