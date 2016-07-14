@@ -57,6 +57,7 @@
         <activity android:name=".Device" android:theme="@android:style/Theme.Dialog" android:screenOrientation="landscape"/>
         <activity android:name=".Login" android:label="Login" android:screenOrientation="landscape" />
         <activity android:name=".ArtutActivity" android:screenOrientation="landscape" />
+        <activity android:name=".KilledActivity" android:label="KilledActivity" android:screenOrientation="landscape" />
         
         <!--  Bluetooth service -->
      <service android:name="com.example.sniperir.RBLService" android:enabled="true" />

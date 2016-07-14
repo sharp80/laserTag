@@ -123,6 +123,9 @@ public class ArtutActivity extends Activity {
 			Log.d(TAG, "########shooterBeaconId :"+ event );
 			event = event.substring(2);
 			sendKilledToServer(event);
+			Intent killed = new Intent(getApplicationContext(),
+					KilledActivity.class);
+			startActivity(killed);
 		}
 
 	}

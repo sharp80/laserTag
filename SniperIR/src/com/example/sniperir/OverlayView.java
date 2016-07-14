@@ -62,7 +62,7 @@ public class OverlayView extends View implements SensorEventListener {
             public void run() {
                     if(mShouldRun) {
                             checkMyHits(); // Call the method to check my hits
-                            mHandler.postDelayed(mUpdateHits, 10000); // 10 second
+                            mHandler.postDelayed(mUpdateHits, 1000); // 1 second
                     }
             }
 	    };
