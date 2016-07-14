@@ -107,6 +107,7 @@ public class ArtutActivity extends Activity {
 				displayData(intent.getByteArrayExtra(RBLService.EXTRA_DATA));
 				String event = getEvent(intent.getByteArrayExtra(RBLService.EXTRA_DATA));
 				execEvent(event);
+				Log.d(TAG, "########gotEvent:"+ event );
 			}
 		}
 	};
@@ -116,12 +117,11 @@ public class ArtutActivity extends Activity {
 	}
 	
 	private void execEvent(String event){
-		if (event.equals("C")) {
+		if (event.equals("[C")) {
 			getBeaconFromServer();
-		} else if (event.startsWith("0") || event.startsWith("1") ||
-				event.startsWith("2") || event.startsWith("3") || 
-				event.startsWith("4")) {
-			Log.d(TAG, "shooterBeaconId :"+ event );
+		} else if (event.startsWith("[S")) {
+			Log.d(TAG, "########shooterBeaconId :"+ event );
+			event = event.substring(2);
 			sendKilledToServer(event);
 		}
 
