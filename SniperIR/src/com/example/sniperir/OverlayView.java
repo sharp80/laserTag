@@ -9,10 +9,14 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
+import android.graphics.drawable.BitmapDrawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -76,7 +80,14 @@ public class OverlayView extends View implements SensorEventListener {
         contentPaint.setTextAlign(Align.CENTER);
         contentPaint.setTextSize(20);
         contentPaint.setColor(Color.RED);
-        canvas.drawCircle(canvas.getWidth()/2, canvas.getHeight()/2, 50, contentPaint);
+       // canvas.drawCircle(canvas.getWidth()/2, canvas.getHeight()/2, 50, contentPaint);
+        
+        Resources res = mMyContext.getResources();
+
+        Bitmap b = BitmapFactory.decodeResource(res, R.drawable.cross);
+        //BitmapDrawable bitmap = new BitmapDrawable("@drawable/cross");
+        //Bitmap b = new Bitmap("@drawable/cross");
+		canvas.drawBitmap(b , canvas.getWidth()/3, canvas.getHeight()/6, contentPaint);
         //canvas.drawText(accelData, canvas.getWidth()/2, canvas.getHeight()/4, contentPaint);
         //canvas.draw(compassData, canvas.getWidth()/2, canvas.getHeight()/2, contentPaint);
         // canvas.drawText(gyroData, canvas.getWidth()/2, (canvas.getHeight()*3)/4, contentPaint);
